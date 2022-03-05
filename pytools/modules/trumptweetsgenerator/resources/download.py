@@ -2,15 +2,17 @@
 Function:
     特朗普推特数据下载
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import json
 import requests
 
 
 '''下载'''
+
+
 def download():
     tweets = []
     for year in range(2009, 2021):

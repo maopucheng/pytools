@@ -2,9 +2,9 @@
 Function:
     多肉数据查询系统
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import io
 import os
@@ -21,9 +21,12 @@ from PyQt5 import QtWidgets, QtGui
 
 
 '''多肉数据查询系统'''
+
+
 class SucculentQuery(QWidget):
     tool_name = '多肉数据查询系统'
-    def __init__(self, parent=None, title='多肉数据查询系统 —— Charles的皮卡丘', **kwargs):
+
+    def __init__(self, parent=None, title='多肉数据查询系统 —— Car的皮皮', **kwargs):
         super(SucculentQuery, self).__init__(parent)
         self.rootdir = os.path.split(os.path.abspath(__file__))[0]
         self.setWindowTitle(title)
@@ -60,35 +63,56 @@ class SucculentQuery(QWidget):
         # 事件绑定
         self.button_find.clicked.connect(self.find)
         self.button_random.clicked.connect(self.randomRead)
-        self.button_update.clicked.connect(lambda _: threading.Thread(target=self.update).start())
+        self.button_update.clicked.connect(
+            lambda _: threading.Thread(target=self.update).start()
+        )
+
     '''数据查询'''
+
     def find(self):
-        datadir = os.path.join(self.rootdir, 'resources/succulents/', self.line_edit.text())
+        datadir = os.path.join(
+            self.rootdir, 'resources/succulents/', self.line_edit.text()
+        )
         if os.path.exists(datadir):
             self.showLabelImage(os.path.join(datadir, 'show.jpg'))
             intro = pickle.load(open(os.path.join(datadir, 'info.pkl'), 'rb'))[-1]
             self.showIntroduction(intro)
+
     '''随机读取'''
+
     def randomRead(self):
-        datadir = random.choice(os.listdir(os.path.join(self.rootdir, 'resources/succulents/')))
+        datadir = random.choice(
+            os.listdir(os.path.join(self.rootdir, 'resources/succulents/'))
+        )
         self.line_edit.setText(datadir)
-        datadir = os.path.join(self.rootdir, 'resources/succulents/', self.line_edit.text())
+        datadir = os.path.join(
+            self.rootdir, 'resources/succulents/', self.line_edit.text()
+        )
         if os.path.exists(datadir):
             self.showLabelImage(os.path.join(datadir, 'show.jpg'))
             intro = pickle.load(open(os.path.join(datadir, 'info.pkl'), 'rb'))[-1]
             self.showIntroduction(intro)
+
     '''数据更新'''
+
     def update(self):
         crawler_handle = SucculentCrawler()
         while True:
-            self.tip_label.setText('数据状态: 正在在更新数据, 数据更新进度: %s/%s' % (crawler_handle.page_pointer+2, len(crawler_handle.page_urls)))
+            self.tip_label.setText(
+                '数据状态: 正在在更新数据, 数据更新进度: %s/%s'
+                % (crawler_handle.page_pointer + 2, len(crawler_handle.page_urls))
+            )
             if crawler_handle.next():
                 break
         self.tip_label.setText('数据状态: 未在更新数据, 数据更新进度: 0/0')
+
     '''在文本框里显示多肉介绍'''
+
     def showIntroduction(self, intro):
         self.text_result.setText('\n\n'.join(intro))
+
     '''在Label对象上显示图片'''
+
     def showLabelImage(self, imagepath):
         image = Image.open(imagepath).resize((300, 300), Image.ANTIALIAS)
         fp = io.BytesIO()

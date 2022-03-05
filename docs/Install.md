@@ -11,7 +11,7 @@
 ## PIP安装(推荐)
 在终端运行如下命令即可(请保证python在环境变量中):
 ```sh
-pip install pikachupytools --upgrade
+pip install pppytools --upgrade
 ```
 
 
@@ -20,13 +20,13 @@ pip install pikachupytools --upgrade
 #### 在线安装
 运行如下命令即可在线安装:
 ```sh
-pip install git+https://github.com/CharlesPikachu/pytools.git@master
+pip install git+https://github.com/Carpp/pytools.git@master
 ```
 
 #### 离线安装
 利用如下命令下载pytools源代码到本地:
 ```sh
-git clone https://github.com/CharlesPikachu/pytools.git
+git clone https://github.com/Carpp/pytools.git
 ```
 接着, 切到pytools目录下:
 ```sh

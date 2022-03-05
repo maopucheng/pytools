@@ -2,9 +2,9 @@
 Function:
     乌克兰地图查询系统
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import io
 import os
@@ -18,24 +18,36 @@ from PyQt5.QtCore import *
 from PyQt5.QtWidgets import *
 from PyQt5 import QtWidgets, QtGui
 from pylab import mpl
+
 mpl.rcParams['font.sans-serif'] = ['FangSong']
 
 
 '''乌克兰地图查询系统'''
+
+
 class UkraineMap(QWidget):
     tool_name = '乌克兰地图查询系统'
-    def __init__(self, parent=None, title='乌克兰地图查询系统 —— Charles的皮卡丘', **kwargs):
+
+    def __init__(self, parent=None, title='乌克兰地图查询系统 —— Car的皮皮', **kwargs):
         super(UkraineMap, self).__init__(parent)
         # 文件路径初始化
         self.rootdir = os.path.split(os.path.abspath(__file__))[0]
         self.mapdir = os.path.join(self.rootdir, 'resources')
         # 获得所有州的中英文名
-        filenames, self.en2cn_states, self.cn2en_states, self.cn2color_states = os.listdir(self.mapdir), {}, {}, {}
+        filenames, self.en2cn_states, self.cn2en_states, self.cn2color_states = (
+            os.listdir(self.mapdir),
+            {},
+            {},
+            {},
+        )
         palettes = self.generatepalette(len(filenames))
         for idx, filename in enumerate(filenames):
             state_en = filename.split('.')[0]
-            if state_en == 'Ukraine': continue
-            info = json.load(open(os.path.join(self.mapdir, filename), 'r', encoding='utf-8'))
+            if state_en == 'Ukraine':
+                continue
+            info = json.load(
+                open(os.path.join(self.mapdir, filename), 'r', encoding='utf-8')
+            )
             try:
                 state_cn = info['properties']['name:zh']
             except:
@@ -55,7 +67,8 @@ class UkraineMap(QWidget):
         self.drawukraine()
         self.map_items = QComboBox()
         self.map_items.addItem('乌克兰地图-基础')
-        for name in self.cn2color_states: self.map_items.addItem(f'乌克兰地图-{name}')
+        for name in self.cn2color_states:
+            self.map_items.addItem(f'乌克兰地图-{name}')
         self.select_btn = QPushButton('绘制')
         # 排版
         grid = QGridLayout()
@@ -66,7 +79,9 @@ class UkraineMap(QWidget):
         self.setLayout(grid)
         # 事件绑定
         self.select_btn.clicked.connect(self.draw)
+
     '''在Label对象上显示图片'''
+
     def showLabelImage(self, imagepath):
         image = Image.open(imagepath).resize((640, 480), Image.ANTIALIAS)
         fp = io.BytesIO()
@@ -75,7 +90,9 @@ class UkraineMap(QWidget):
         qtimg.loadFromData(fp.getvalue(), 'PNG')
         qtimg_pixmap = QtGui.QPixmap.fromImage(qtimg)
         self.show_label.setPixmap(qtimg_pixmap)
+
     '''生成颜色'''
+
     def generatepalette(self, num_classes):
         palette = [0] * (num_classes * 3)
         for j in range(0, num_classes):
@@ -85,30 +102,40 @@ class UkraineMap(QWidget):
             palette[j * 3 + 2] = 0
             i = 0
             while lab:
-                palette[j * 3 + 0] |= (((lab >> 0) & 1) << (7 - i))
-                palette[j * 3 + 1] |= (((lab >> 1) & 1) << (7 - i))
-                palette[j * 3 + 2] |= (((lab >> 2) & 1) << (7 - i))
+                palette[j * 3 + 0] |= ((lab >> 0) & 1) << (7 - i)
+                palette[j * 3 + 1] |= ((lab >> 1) & 1) << (7 - i)
+                palette[j * 3 + 2] |= ((lab >> 2) & 1) << (7 - i)
                 i += 1
                 lab >>= 3
         palette = np.array(palette).reshape(-1, 3)
         palette = palette.tolist()
         return palette
+
     '''rgb转16进制'''
+
     def rgb2hex(self, rgb):
         color = '#'
         for num in rgb:
             color += str(hex(num))[-2:].replace('x', '0').upper()
         return color
+
     '''绘制'''
+
     def draw(self):
         state_name_cn = '-'.join(self.map_items.currentText().split('-')[1:])
         if state_name_cn == '基础':
             self.drawukraine()
         else:
-            self.drawstate(self.cn2en_states[state_name_cn], self.cn2color_states[state_name_cn])
+            self.drawstate(
+                self.cn2en_states[state_name_cn], self.cn2color_states[state_name_cn]
+            )
+
     '''画乌克兰'''
+
     def drawukraine(self, show_label_image=True):
-        info = json.load(open(os.path.join(self.mapdir, 'Ukraine.json'), 'r', encoding='utf-8'))
+        info = json.load(
+            open(os.path.join(self.mapdir, 'Ukraine.json'), 'r', encoding='utf-8')
+        )
         features = info['features']
         for feature in features:
             try:
@@ -119,27 +146,39 @@ class UkraineMap(QWidget):
             geometry = feature['geometry']
             x_list, y_list = [], []
             for coordinate in geometry['coordinates'][-1]:
-                if not coordinate: continue
+                if not coordinate:
+                    continue
                 x_list.append(coordinate[0])
                 y_list.append(coordinate[1])
             plt.plot(x_list, y_list, color='black')
-        if show_label_image: 
+        if show_label_image:
             plt.savefig(os.path.join(self.rootdir, 'ukraine.png'))
             plt.close()
             self.showLabelImage(os.path.join(self.rootdir, 'ukraine.png'))
+
     '''画乌克兰的某个州'''
+
     def drawstate(self, state_name='Kiev', color=None):
         assert state_name in self.en2cn_states
         self.drawukraine(show_label_image=False)
-        info = json.load(open(os.path.join(self.mapdir, state_name+'.json'), 'r', encoding='utf-8'))
+        info = json.load(
+            open(os.path.join(self.mapdir, state_name + '.json'), 'r', encoding='utf-8')
+        )
         geometry = info['geometry']
         x_list, y_list = [], []
         for coordinate in geometry['coordinates'][-1]:
-            if not coordinate: continue
+            if not coordinate:
+                continue
             x_list.append(coordinate[0])
             y_list.append(coordinate[1])
             plt.plot(x_list, y_list, color=color)
-            plt.text(x_list[0], y_list[0], self.en2cn_states[state_name], size=10, color=color)
+            plt.text(
+                x_list[0],
+                y_list[0],
+                self.en2cn_states[state_name],
+                size=10,
+                color=color,
+            )
         plt.savefig(os.path.join(self.rootdir, f'{state_name}.png'))
         plt.close()
         self.showLabelImage(os.path.join(self.rootdir, f'{state_name}.png'))

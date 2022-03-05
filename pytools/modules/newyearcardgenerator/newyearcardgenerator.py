@@ -2,9 +2,9 @@
 Function:
     新年贺卡生成器
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import os
 import io
@@ -15,9 +15,12 @@ from PIL import Image, ImageDraw, ImageFont
 
 
 '''新年贺卡生成器'''
+
+
 class NewYearCardGenerator(QtWidgets.QWidget):
     tool_name = '新年贺卡生成器'
-    def __init__(self, parent=None, title='新年贺卡生成器 —— Charles的皮卡丘', **kwargs):
+
+    def __init__(self, parent=None, title='新年贺卡生成器 —— Car的皮皮', **kwargs):
         super(NewYearCardGenerator, self).__init__()
         rootdir = os.path.split(os.path.abspath(__file__))[0]
         self.setFixedSize(600, 500)
@@ -76,14 +79,20 @@ class NewYearCardGenerator(QtWidgets.QWidget):
         self.generate_button.clicked.connect(self.generate)
         self.save_button.clicked.connect(self.save)
         self.generate()
+
     '''生成贺卡'''
+
     def generate(self):
         # 检查路径是否存在
         content_path = self.content_edit.text()
         bg_path = self.bg_edit.text()
         font_path = self.font_edit.text()
         font_color = self.font_color_combobox.currentText()
-        if (not self.checkFilepath(content_path)) or (not self.checkFilepath(bg_path)) or (not self.checkFilepath(font_path)):
+        if (
+            (not self.checkFilepath(content_path))
+            or (not self.checkFilepath(bg_path))
+            or (not self.checkFilepath(font_path))
+        ):
             self.card_image = None
             return False
         # 写贺卡
@@ -92,9 +101,16 @@ class NewYearCardGenerator(QtWidgets.QWidget):
         image = Image.open(bg_path).convert('RGB')
         draw = ImageDraw.Draw(image)
         draw.text((180, 30), contents[0], font=font_card, fill=font_color)
-        for idx, content in enumerate(contents[1: -1]):
-            draw.text((220, 40+(idx+1)*40), content, font=font_card, fill=font_color)
-        draw.text((180, 40+(idx+2)*40+10), contents[-1], font=font_card, fill=font_color)
+        for idx, content in enumerate(contents[1:-1]):
+            draw.text(
+                (220, 40 + (idx + 1) * 40), content, font=font_card, fill=font_color
+            )
+        draw.text(
+            (180, 40 + (idx + 2) * 40 + 10),
+            contents[-1],
+            font=font_card,
+            fill=font_color,
+        )
         # 显示
         fp = io.BytesIO()
         image.save(fp, 'BMP')
@@ -103,25 +119,35 @@ class NewYearCardGenerator(QtWidgets.QWidget):
         qtimg_pixmap = QtGui.QPixmap.fromImage(qtimg)
         self.show_label.setPixmap(qtimg_pixmap)
         self.card_image = image
+
     '''打开贺卡内容文件'''
+
     def openContentFilepath(self):
         filepath = QFileDialog.getOpenFileName(self, "请选取贺卡内容文件", '.')
         self.content_edit.setText(filepath[0])
+
     '''打开贺卡背景图片文件'''
+
     def openBGFilepath(self):
         filepath = QFileDialog.getOpenFileName(self, "请选取贺卡背景图片", '.')
         self.bg_edit.setText(filepath[0])
+
     '''打开字体路径'''
+
     def openFontFilepath(self):
         filepath = QFileDialog.getOpenFileName(self, "请选取字体文件", '.')
         self.font_edit.setText(filepath[0])
+
     '''保存贺卡'''
+
     def save(self):
         filename = QFileDialog.getSaveFileName(self, '保存', './card.jpg', '所有文件(*)')
         if filename[0] != '' and self.card_image:
             self.card_image.save(filename[0])
             QDialog().show()
+
     '''检查文件是否存在'''
+
     def checkFilepath(self, filepath):
         if not filepath:
             return False

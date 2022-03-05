@@ -2,9 +2,9 @@
 Function:
     让电脑主板上的蜂鸣器哼歌
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import os
 import sys
@@ -16,11 +16,15 @@ from PyQt5.QtWidgets import *
 
 
 '''让电脑主板上的蜂鸣器哼歌'''
+
+
 class ComputerSinger(QWidget):
     tool_name = '让电脑主板上的蜂鸣器哼歌'
-    def __init__(self, parent=None, title='让电脑主板上的蜂鸣器哼歌 —— Charles的皮卡丘', **kwargs):
+
+    def __init__(self, parent=None, title='让电脑主板上的蜂鸣器哼歌 —— Car的皮皮', **kwargs):
         super(ComputerSinger, self).__init__(parent)
         import ctypes
+
         rootdir = os.path.split(os.path.abspath(__file__))[0]
         self.rootdir = rootdir
         self.setFixedSize(500, 100)
@@ -31,7 +35,9 @@ class ComputerSinger(QWidget):
         # --label
         self.musicfilepath_label = QLabel('音乐简谱路径:')
         # --输入框
-        self.musicfilepath_edit = QLineEdit(os.path.join(rootdir, 'resources/musicfiles/小幸运'))
+        self.musicfilepath_edit = QLineEdit(
+            os.path.join(rootdir, 'resources/musicfiles/小幸运')
+        )
         # --按钮
         self.choose_button = QPushButton('选择')
         self.play_button = QPushButton('播放')
@@ -43,24 +49,40 @@ class ComputerSinger(QWidget):
         self.setLayout(self.grid)
         # 事件绑定
         self.choose_button.clicked.connect(self.openfile)
-        self.play_button.clicked.connect(lambda _: threading.Thread(target=self.play).start())
+        self.play_button.clicked.connect(
+            lambda _: threading.Thread(target=self.play).start()
+        )
         # 一些常量
-        self.pitchs_dict = {'l': 0.5, 'm': 1., 'h': 2.}
-        self.tone2freq_dict = {'C': 523, 'D': 587, 'E': 659, 'F': 698, 'G': 784, 'A': 880, 'B': 988}
+        self.pitchs_dict = {'l': 0.5, 'm': 1.0, 'h': 2.0}
+        self.tone2freq_dict = {
+            'C': 523,
+            'D': 587,
+            'E': 659,
+            'F': 698,
+            'G': 784,
+            'A': 880,
+            'B': 988,
+        }
         self.tone_scale = 1.06
         self.beats = 1000 * 60 / 65
         self.beep_player = ctypes.windll.kernel32
+
     '''打开文件'''
+
     def openfile(self):
         filepath = QFileDialog.getOpenFileName(self, '请选取音乐简谱', self.rootdir)
         self.musicfilepath_edit.setText(filepath[0])
+
     '''解析音乐简谱'''
+
     def parse(self, filepath):
         song_info = open(filepath, 'r').read().replace('\n', '').split(',')
         tone = song_info[0]
         song_info = song_info[1:]
         return tone, song_info
+
     '''播放'''
+
     def play(self):
         filepath = self.musicfilepath_edit.text()
         if not os.path.isfile(filepath):
@@ -78,4 +100,7 @@ class ComputerSinger(QWidget):
             if notes[int(item[0])] == 0:
                 time.sleep(self.beats / 1000)
             else:
-                self.beep_player.Beep(int(notes[int(item[0])]*self.pitchs_dict[item[1]]), int(self.beats * float(item[2:])))
+                self.beep_player.Beep(
+                    int(notes[int(item[0])] * self.pitchs_dict[item[1]]),
+                    int(self.beats * float(item[2:])),
+                )

@@ -3,16 +3,16 @@
 </div>
 <br />
 
-[![docs](https://img.shields.io/badge/docs-latest-blue)](https://pikachupytools.readthedocs.io/zh/latest/)
-[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pikachupytools)](https://pypi.org/project/pikachupytools/)
-[![PyPI](https://img.shields.io/pypi/v/pikachupytools)](https://pypi.org/project/pikachupytools)
-[![license](https://img.shields.io/github/license/CharlesPikachu/pytools.svg)](https://github.com/CharlesPikachu/pytools/blob/master/LICENSE)
-[![PyPI - Downloads](https://pepy.tech/badge/pikachupytools)](https://pypi.org/project/pikachupytools/)
-[![PyPI - Downloads](https://img.shields.io/pypi/dm/pikachupytools?style=flat-square)](https://pypi.org/project/pikachupytools/)
-[![issue resolution](https://isitmaintained.com/badge/resolution/CharlesPikachu/pytools.svg)](https://github.com/CharlesPikachu/pytools/issues)
-[![open issues](https://isitmaintained.com/badge/open/CharlesPikachu/pytools.svg)](https://github.com/CharlesPikachu/pytools/issues)
+[![docs](https://img.shields.io/badge/docs-latest-blue)](https://pppytools.readthedocs.io/zh/latest/)
+[![PyPI - Python Version](https://img.shields.io/pypi/pyversions/pppytools)](https://pypi.org/project/pppytools/)
+[![PyPI](https://img.shields.io/pypi/v/pppytools)](https://pypi.org/project/pppytools)
+[![license](https://img.shields.io/github/license/Carpp/pytools.svg)](https://github.com/Carpp/pytools/blob/master/LICENSE)
+[![PyPI - Downloads](https://pepy.tech/badge/pppytools)](https://pypi.org/project/pppytools/)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/pppytools?style=flat-square)](https://pypi.org/project/pppytools/)
+[![issue resolution](https://isitmaintained.com/badge/resolution/Carpp/pytools.svg)](https://github.com/Carpp/pytools/issues)
+[![open issues](https://isitmaintained.com/badge/open/Carpp/pytools.svg)](https://github.com/Carpp/pytools/issues)
 
-Documents: https://pikachupytools.readthedocs.io/zh/latest/
+Documents: https://pppytools.readthedocs.io/zh/latest/
 
 
 # Pytools
@@ -66,16 +66,16 @@ You can star this repository to keep track of the project if it's helpful for yo
 
 #### Pip install
 ```
-run "pip install pikachupytools"
+run "pip install pppytools"
 ```
 
 #### Source code install
 ```sh
 (1) Offline
-Step1: git clone https://github.com/CharlesPikachu/pytools.git
+Step1: git clone https://github.com/Carpp/pytools.git
 Step2: cd pytools -> run "python setup.py install"
 (2) Online
-run "pip install git+https://github.com/CharlesPikachu/pytools.git@master"
+run "pip install git+https://github.com/Carpp/pytools.git@master"
 ```
 
 
@@ -94,21 +94,15 @@ tool_client.execute(random.choice(list(all_supports.values())))
 ![img](./docs/screenshot.gif)
 
 
-# Projects in Charles_pikachu
-- [Games](https://github.com/CharlesPikachu/Games): Create interesting games by pure python.
-- [DecryptLogin](https://github.com/CharlesPikachu/DecryptLogin): APIs for loginning some websites by using requests.
-- [Musicdl](https://github.com/CharlesPikachu/musicdl): A lightweight music downloader written by pure python.
-- [Videodl](https://github.com/CharlesPikachu/videodl): A lightweight video downloader written by pure python.
-- [Pytools](https://github.com/CharlesPikachu/pytools): Some useful tools written by pure python.
-- [PikachuWeChat](https://github.com/CharlesPikachu/pikachuwechat): Play WeChat with itchat-uos.
-- [Pydrawing](https://github.com/CharlesPikachu/pydrawing): Beautify your image or video.
-- [ImageCompressor](https://github.com/CharlesPikachu/imagecompressor): Image compressors written by pure python.
-- [FreeProxy](https://github.com/CharlesPikachu/freeproxy): Collecting free proxies from internet.
-- [Paperdl](https://github.com/CharlesPikachu/paperdl): Search and download paper from specific websites.
-- [Sciogovterminal](https://github.com/CharlesPikachu/sciogovterminal): Browse "The State Council Information Office of the People's Republic of China" in the terminal.
-
-
-# More
-#### WeChat Official Accounts
-*Charles_pikachu*  
-![img](./docs/pikachu.jpg)
+# Projects in Car_pp
+- [Games](https://github.com/Carpp/Games): Create interesting games by pure python.
+- [DecryptLogin](https://github.com/Carpp/DecryptLogin): APIs for loginning some websites by using requests.
+- [Musicdl](https://github.com/Carpp/musicdl): A lightweight music downloader written by pure python.
+- [Videodl](https://github.com/Carpp/videodl): A lightweight video downloader written by pure python.
+- [Pytools](https://github.com/Carpp/pytools): Some useful tools written by pure python.
+- [ppWeChat](https://github.com/Carpp/ppwechat): Play WeChat with itchat-uos.
+- [Pydrawing](https://github.com/Carpp/pydrawing): Beautify your image or video.
+- [ImageCompressor](https://github.com/Carpp/imagecompressor): Image compressors written by pure python.
+- [FreeProxy](https://github.com/Carpp/freeproxy): Collecting free proxies from internet.
+- [Paperdl](https://github.com/Carpp/paperdl): Search and download paper from specific websites.
+- [Sciogovterminal](https://github.com/Carpp/sciogovterminal): Browse "The State Council Information Office of the People's Republic of China" in the terminal.

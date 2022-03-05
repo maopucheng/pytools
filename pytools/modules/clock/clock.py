@@ -2,26 +2,33 @@
 Function:
     简易时钟
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import turtle
 import datetime
 
 
 '''简易时钟'''
-class Clock():
+
+
+class Clock:
     tool_name = '简易时钟'
-    def __init__(self, title='简易时钟 —— Charles的皮卡丘', time_deltas=(0, 0, 0), **kwargs):
+
+    def __init__(self, title='简易时钟 —— Car的皮皮', time_deltas=(0, 0, 0), **kwargs):
         turtle.title(title)
         self.time_deltas = time_deltas
+
     '''悬空移动'''
+
     def move(self, distance):
         turtle.penup()
         turtle.forward(distance)
         turtle.pendown()
+
     '''创建表针turtle'''
+
     def createhand(self, name, length):
         turtle.reset()
         self.move(-length * 0.01)
@@ -30,7 +37,9 @@ class Clock():
         turtle.end_poly()
         hand = turtle.get_poly()
         turtle.register_shape(name, hand)
+
     '''创建时钟'''
+
     def createclock(self, radius):
         turtle.reset()
         turtle.pensize(7)
@@ -38,22 +47,28 @@ class Clock():
             self.move(radius)
             if i % 5 == 0:
                 turtle.forward(20)
-                self.move(-radius-20)
+                self.move(-radius - 20)
             else:
                 turtle.dot(5)
                 self.move(-radius)
             turtle.right(6)
+
     '''获得今天是星期几'''
+
     def getweekday(self, today):
         return ['星期一', '星期二', '星期三', '星期四', '星期五', '星期六', '星期日'][today.weekday()]
+
     '''获得今天的日期'''
+
     def getdate(self, today):
         return '%s年%s月%s日' % (today.year, today.month, today.day)
+
     '''动态显示表针'''
+
     def starttick(self, second_hand, minute_hand, hour_hand, printer):
         today = datetime.datetime.today()
         second = today.second + self.time_deltas[0] + today.microsecond * 1e-6
-        minute = today.minute + self.time_deltas[1] + second / 60.
+        minute = today.minute + self.time_deltas[1] + second / 60.0
         hour = (today.hour + self.time_deltas[2] + minute / 60) % 12
         # 设置朝向
         second_hand.setheading(6 * second)
@@ -61,7 +76,9 @@ class Clock():
         hour_hand.setheading(30 * hour)
         turtle.tracer(False)
         printer.forward(65)
-        printer.write(self.getweekday(today), align='center', font=("Courier", 14, "bold"))
+        printer.write(
+            self.getweekday(today), align='center', font=("Courier", 14, "bold")
+        )
         printer.forward(120)
         printer.write('12', align='center', font=("Courier", 14, "bold"))
         printer.back(250)
@@ -78,8 +95,12 @@ class Clock():
         printer.home()
         turtle.tracer(True)
         # 100ms调用一次
-        turtle.ontimer(lambda: self.starttick(second_hand, minute_hand, hour_hand, printer), 100)
+        turtle.ontimer(
+            lambda: self.starttick(second_hand, minute_hand, hour_hand, printer), 100
+        )
+
     '''运行'''
+
     def run(self):
         # 不显示绘制时钟的过程
         turtle.tracer(False)

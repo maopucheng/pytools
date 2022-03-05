@@ -2,9 +2,9 @@
 Function:
     邮件控制电脑
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import re
 import os
@@ -25,14 +25,18 @@ from email.mime.multipart import MIMEMultipart
 
 
 '''邮箱类'''
-class EmailClass():
+
+
+class EmailClass:
     def __init__(self, options):
         self.options = options
         # POP3协议接收邮件
         self.pop3_server = poplib.POP3(options['receiver']['pop3_server'])
         self.pop3_server.user(options['receiver']['email'])
         self.pop3_server.pass_(options['receiver']['password'])
+
     '''接收邮件'''
+
     def get(self, *args):
         res = {}
         for arg in args:
@@ -60,7 +64,9 @@ class EmailClass():
             else:
                 res[arg] = None
         return res
+
     '''SMTP协议发送邮件'''
+
     def send(self, content=None, attach_path=None):
         options = self.options
         msg = MIMEMultipart()
@@ -68,18 +74,24 @@ class EmailClass():
         if not options['receiver']['enable_ssl']:
             smtp_server = smtplib.SMTP(options['receiver']['smtp_server'], 25)
             smtp_server.set_debuglevel(1)
-            smtp_server.login(options['receiver']['email'], options['receiver']['password'])
+            smtp_server.login(
+                options['receiver']['email'], options['receiver']['password']
+            )
         else:
             if options['receiver']['port']:
                 try:
-                    smtp_server = smtplib.SMTP_SSL(options['receiver']['smtp_server'], options['receiver']['port'])
+                    smtp_server = smtplib.SMTP_SSL(
+                        options['receiver']['smtp_server'], options['receiver']['port']
+                    )
                 except:
                     smtp_server = smtplib.SMTP_SSL(options['receiver']['smtp_server'])
             else:
                 smtp_server = smtplib.SMTP_SSL(options['receiver']['smtp_server'])
             smtp_server.set_debuglevel(1)
             smtp_server.ehlo(options['receiver']['smtp_server'])
-            smtp_server.login(options['receiver']['email'], options['receiver']['password'])
+            smtp_server.login(
+                options['receiver']['email'], options['receiver']['password']
+            )
         # From
         msg_from = 'Server <%s>' % options['receiver']['email']
         from_name, from_addr = parseaddr(msg_from)
@@ -89,7 +101,9 @@ class EmailClass():
         to_name, to_addr = parseaddr(msg_to)
         msg['To'] = formataddr((Header(to_name, 'utf-8').encode(), to_addr))
         # Time
-        msg['Date'] = Header(datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'utf-8')
+        msg['Date'] = Header(
+            datetime.datetime.now().strftime('%Y-%m-%d %H:%M:%S'), 'utf-8'
+        )
         if attach_path is None and content is None:
             return False
         if content is None:
@@ -99,7 +113,9 @@ class EmailClass():
         if attach_path:
             with open(attach_path, 'rb') as f:
                 filename = os.path.basename(attach_path)
-                mime = MIMEBase('attachment', filename.split('.')[-1], filename=filename)
+                mime = MIMEBase(
+                    'attachment', filename.split('.')[-1], filename=filename
+                )
                 mime.add_header('Content-Disposition', 'attachment', filename=filename)
                 mime.add_header('Content-ID', '<0>')
                 mime.add_header('X-Attachment-Id', '0')
@@ -109,17 +125,23 @@ class EmailClass():
         smtp_server.sendmail(from_addr, [to_addr], msg.as_string())
         smtp_server.quit()
         return True
+
     '''关闭pop3连接'''
+
     def closepop(self):
         self.pop3_server.quit()
+
     '''重置pop3连接'''
+
     def resetpop(self):
         options = self.options
         self.closepop()
         self.pop3_server = poplib.POP3(options['receiver']['pop3_server'])
         self.pop3_server.user(options['receiver']['email'])
         self.pop3_server.pass_(options['receiver']['password'])
+
     '''解析邮件'''
+
     def __parsemessage(self, msg):
         result = {}
         for header in ['From', 'To', 'Subject']:
@@ -149,7 +171,7 @@ class EmailClass():
                     temp = msg.get('Content-Type', '').lower()
                     pos = temp.find('charset=')
                     if pos >= 0:
-                        charset = temp[pos+8:].strip()
+                        charset = temp[pos + 8 :].strip()
                 if charset:
                     content = content.decode(charset)
                 result['Text'] = content
@@ -157,10 +179,13 @@ class EmailClass():
 
 
 '''邮件控制电脑'''
-class ControlPCbyEmail():
+
+
+class ControlPCbyEmail:
     tool_name = '邮件控制电脑'
+
     def __init__(self, time_interval=5, **kwargs):
-        if 'options' in kwargs: 
+        if 'options' in kwargs:
             self.options = kwargs['options']
         else:
             rootdir = os.path.split(os.path.abspath(__file__))[0]
@@ -169,12 +194,16 @@ class ControlPCbyEmail():
         if 'word2cmd' in kwargs:
             self.word2cmd_dict = kwargs['word2cmd_dict']
         else:
-            with open(os.path.join(rootdir, 'resources/word2cmd.json'), 'r', encoding='utf-8') as f:
+            with open(
+                os.path.join(rootdir, 'resources/word2cmd.json'), 'r', encoding='utf-8'
+            ) as f:
                 self.word2cmd_dict = json.load(f)
         self.email = EmailClass(self.options)
         self.num_msg = len(self.email.get('list')['list'][1])
         self.time_interval = time_interval
+
     '''运行服务器'''
+
     def run(self):
         options, word2cmd_dict = self.options, self.word2cmd_dict
         self.printinfo()
@@ -183,7 +212,7 @@ class ControlPCbyEmail():
             self.email.resetpop()
             mails = self.email.get('list')['list'][1]
             if len(mails) > self.num_msg:
-                for i in range(self.num_msg+1, len(mails)+1):
+                for i in range(self.num_msg + 1, len(mails) + 1):
                     res = self.email.get(i)
                     res_from = res[i]['From']
                     res_from = re.findall(r'<(.*?)>', res_from)[0].lower()
@@ -207,7 +236,9 @@ class ControlPCbyEmail():
                         self.runcmd(command)
                 self.num_msg = len(mails)
             time.sleep(self.time_interval)
+
     '''os.system()运行命令cmd'''
+
     def runcmd(self, cmd):
         try:
             os.system(cmd)
@@ -216,15 +247,20 @@ class ControlPCbyEmail():
         except:
             print('[Error]: Fail to Run <%s>...' % cmd)
             return False
+
     '''截屏'''
+
     def screenshot(self, savename='screenshot.jpg'):
         from PIL import ImageGrab
+
         img = ImageGrab.grab()
         img.save(savename)
         print('[INFO]: Get %s successfully...' % savename)
+
     '''打印欢迎信息'''
+
     def printinfo(self):
-        print('*'*20 + 'Welcome' + '*'*20)
+        print('*' * 20 + 'Welcome' + '*' * 20)
         print('[Function]: Control your computer by your email')
-        print('[Author]: Charles')
-        print('[微信公众号]: Charles的皮卡丘')
+        print('[Author]: Car')
+        print('[微信公众号]: Car的皮皮')

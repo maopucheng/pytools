@@ -2,9 +2,9 @@
 Function:
     鲁迅名言查询系统
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import os
 from PyQt5 import *
@@ -17,9 +17,12 @@ from fuzzywuzzy import process
 
 
 '''鲁迅名言查询系统'''
+
+
 class LuxunSentencesQuery(QWidget):
     tool_name = '鲁迅名言查询系统'
-    def __init__(self, parent=None, title='鲁迅名言查询系统 —— Charles的皮卡丘', **kwargs):
+
+    def __init__(self, parent=None, title='鲁迅名言查询系统 —— Car的皮皮', **kwargs):
         super(LuxunSentencesQuery, self).__init__()
         rootdir = os.path.split(os.path.abspath(__file__))[0]
         self.setWindowTitle(title)
@@ -48,7 +51,9 @@ class LuxunSentencesQuery(QWidget):
         self.resize(600, 400)
         self.button.clicked.connect(self.inquiry)
         self.paragraphs = self.loadData(os.path.join(rootdir, 'resources/book.txt'))
+
     '''查询'''
+
     def inquiry(self):
         sentence = self.line_edit.text()
         matched = []
@@ -66,16 +71,25 @@ class LuxunSentencesQuery(QWidget):
             if not infos:
                 infos.append('未匹配到任何相似度大于%d的句子.\n' % score_thresh)
             self.text.setText('\n\n\n'.join(infos)[:-1])
+
     '''根据下拉框选项获取匹配度'''
+
     def getScoreThresh(self):
-        if self.cmb.currentIndex() == 0: return 100
-        elif self.cmb.currentIndex() == 1: return 90
-        elif self.cmb.currentIndex() == 2: return 80
-        elif self.cmb.currentIndex() == 3: return 70
+        if self.cmb.currentIndex() == 0:
+            return 100
+        elif self.cmb.currentIndex() == 1:
+            return 90
+        elif self.cmb.currentIndex() == 2:
+            return 80
+        elif self.cmb.currentIndex() == 3:
+            return 70
+
     '''数据导入'''
+
     def loadData(self, data_path):
         paragraphs = []
         with open(data_path, 'r', encoding='utf-8') as f:
             for line in f.readlines():
-                if line.strip(): paragraphs.append(line.strip('\n'))
+                if line.strip():
+                    paragraphs.append(line.strip('\n'))
         return paragraphs

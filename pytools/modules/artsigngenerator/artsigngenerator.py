@@ -2,9 +2,9 @@
 Function:
     艺术签名生成器
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import os
 import re
@@ -17,9 +17,12 @@ from PyQt5 import QtWidgets, QtGui
 
 
 '''艺术签名生成器'''
+
+
 class ArtSignGenerator(QWidget):
     tool_name = '艺术签名生成器'
-    def __init__(self, parent=None, title='艺术签名生成器 —— Charles的皮卡丘', **kwargs):
+
+    def __init__(self, parent=None, title='艺术签名生成器 —— Car的皮皮', **kwargs):
         super(ArtSignGenerator, self).__init__(parent)
         rootdir = os.path.split(os.path.abspath(__file__))[0]
         self.setFixedSize(600, 500)
@@ -31,7 +34,9 @@ class ArtSignGenerator(QWidget):
         self.show_label = QLabel()
         self.show_label.setScaledContents(True)
         self.show_label.setMaximumSize(600, 400)
-        self.show_image = Image.open(os.path.join(rootdir, 'resources/background.jpg')).convert('RGB')
+        self.show_image = Image.open(
+            os.path.join(rootdir, 'resources/background.jpg')
+        ).convert('RGB')
         self.updateimage()
         self.show_image_ext = 'jpg'
         self.name_label = QLabel('输入您的姓名:')
@@ -48,7 +53,18 @@ class ArtSignGenerator(QWidget):
         for item in ['一笔艺术签', '连笔商务签', '一笔商务签', '真人手写', '暴躁字']:
             self.font_combobox.addItem(item)
         self.color_combobox = QComboBox()
-        for item in ['Black', 'Blue', 'Red', 'Green', 'Yellow', 'Pink', 'DeepSkyBlue', 'Cyan', 'Orange', 'Seashell']:
+        for item in [
+            'Black',
+            'Blue',
+            'Red',
+            'Green',
+            'Yellow',
+            'Pink',
+            'DeepSkyBlue',
+            'Cyan',
+            'Orange',
+            'Seashell',
+        ]:
             self.color_combobox.addItem(item)
         # 组件布局
         self.grid.addWidget(self.show_label, 0, 0, 5, 5)
@@ -64,7 +80,9 @@ class ArtSignGenerator(QWidget):
         # 事件绑定
         self.generate_button.clicked.connect(self.generate)
         self.save_button.clicked.connect(self.save)
+
     '''生成签名'''
+
     def generate(self):
         font2ids_dict = {
             '一笔艺术签': ['901', '15'],
@@ -72,7 +90,7 @@ class ArtSignGenerator(QWidget):
             '一笔商务签': ['905', '14'],
             '真人手写': ['343', '14'],
             '卡通趣圆字': ['397', '14'],
-            '暴躁字': ['380', '14']
+            '暴躁字': ['380', '14'],
         }
         color2ids_dict = {
             'Black': ['#000000', '#FFFFFF'],
@@ -84,14 +102,14 @@ class ArtSignGenerator(QWidget):
             'DeepSkyBlue': ['#00BFFF', '#FFFFFF'],
             'Cyan': ['#00FFFF', '#FFFFFF'],
             'Orange': ['#FFA500', '#FFFFFF'],
-            'Seashell': ['#FFF5EE', '#FFFFFF']
+            'Seashell': ['#FFF5EE', '#FFFFFF'],
         }
         url = 'http://www.jiqie.com/a/re14.php'
         headers = {
             'Referer': 'http://www.jiqie.com/a/14.htm',
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.129 Safari/537.36',
             'Host': 'www.jiqie.com',
-            'Origin': 'http://www.jiqie.com'
+            'Origin': 'http://www.jiqie.com',
         }
         ids_0 = font2ids_dict[self.font_combobox.currentText()]
         ids_1 = color2ids_dict[self.color_combobox.currentText()]
@@ -101,7 +119,7 @@ class ArtSignGenerator(QWidget):
             'id1': ids_0[0],
             'id2': ids_0[1],
             'id3': ids_1[0],
-            'id5': ids_1[1]
+            'id5': ids_1[1],
         }
         response = requests.post(url, headers=headers, data=data)
         image_url = re.findall(r'src="(.*?)"', response.text)[0]
@@ -113,7 +131,9 @@ class ArtSignGenerator(QWidget):
         self.show_image = Image.open('tmp.%s' % self.show_image_ext).convert('RGB')
         self.updateimage()
         os.remove('tmp.%s' % self.show_image_ext)
+
     '''更新界面上的图片'''
+
     def updateimage(self):
         if self.show_image is None:
             return
@@ -123,11 +143,15 @@ class ArtSignGenerator(QWidget):
         qtimage.loadFromData(fp.getvalue(), 'JPEG')
         qtimage_pixmap = QtGui.QPixmap.fromImage(qtimage)
         self.show_label.setPixmap(qtimage_pixmap)
+
     '''保存签名'''
+
     def save(self):
         if self.show_image is None:
             return
-        filename = QFileDialog.getSaveFileName(self, '保存', './sign.%s' % self.show_image_ext, '所有文件(*)')
+        filename = QFileDialog.getSaveFileName(
+            self, '保存', './sign.%s' % self.show_image_ext, '所有文件(*)'
+        )
         if filename[0]:
             self.show_image.save(filename[0])
             QDialog().show()

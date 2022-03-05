@@ -2,9 +2,9 @@
 Function:
     你生日那天的宇宙
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import io
 import os
@@ -21,14 +21,18 @@ from PyQt5 import QtWidgets, QtGui
 from openpyxl import load_workbook
 from requests.adapters import HTTPAdapter
 from requests.packages.urllib3.util.retry import Retry
+
 warnings.filterwarnings('ignore')
 
 
 '''你生日那天的宇宙'''
+
+
 class HubbleSeeOnBirthday(QWidget):
     tool_name = '你生日那天的宇宙'
     update_signal = pyqtSignal(dict, name='data')
-    def __init__(self, parent=None, title='你生日那天的宇宙 —— Charles的皮卡丘', **kwargs):
+
+    def __init__(self, parent=None, title='你生日那天的宇宙 —— Car的皮皮', **kwargs):
         super(HubbleSeeOnBirthday, self).__init__(parent)
         rootdir = os.path.split(os.path.abspath(__file__))[0]
         self.rootdir = rootdir
@@ -42,7 +46,9 @@ class HubbleSeeOnBirthday(QWidget):
         self.show_label = QLabel()
         self.show_label.setScaledContents(True)
         self.show_label.setMaximumSize(400, 300)
-        self.showLabelImage(Image.open(os.path.join(rootdir, 'resources/icon/icon.jpg')))
+        self.showLabelImage(
+            Image.open(os.path.join(rootdir, 'resources/icon/icon.jpg'))
+        )
         # --显示介绍文字的text
         self.text_result = QTextEdit()
         # --日期选择下拉框
@@ -70,18 +76,28 @@ class HubbleSeeOnBirthday(QWidget):
         self.grid.addWidget(self.save_button, 10, 11, 1, 1)
         self.setLayout(self.grid)
         # 事件绑定
-        self.query_button.clicked.connect(lambda _: threading.Thread(target=self.query).start())
+        self.query_button.clicked.connect(
+            lambda _: threading.Thread(target=self.query).start()
+        )
         self.save_button.clicked.connect(self.save)
         self.update_signal.connect(self.update)
         # 一些必要的变量
         self.is_querying = False
-        self.full_year_data = self.loadFullYearData(os.path.join(rootdir, 'resources/hubble-birthdays-full-year.xlsx'))
+        self.full_year_data = self.loadFullYearData(
+            os.path.join(rootdir, 'resources/hubble-birthdays-full-year.xlsx')
+        )
         self.data_for_save = None
+
     '''查询'''
+
     def query(self):
         if not self.is_querying:
             self.is_querying = True
-            key = self.month_combobox.currentText() + '-' + self.day_combobox.currentText()
+            key = (
+                self.month_combobox.currentText()
+                + '-'
+                + self.day_combobox.currentText()
+            )
             url = self.full_year_data.get(key)
             if url:
                 headers = {
@@ -98,7 +114,7 @@ class HubbleSeeOnBirthday(QWidget):
                     'Sec-Fetch-Site': 'none',
                     'Sec-Fetch-User': '?1',
                     'Upgrade-Insecure-Requests': '1',
-                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36'
+                    'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.149 Safari/537.36',
                 }
                 # 因为经常请求失败, 所以加个try块
                 while True:
@@ -108,16 +124,28 @@ class HubbleSeeOnBirthday(QWidget):
                     except:
                         continue
                 html_root = etree.HTML(response.text)
-                html = html_root.xpath('//*[@id="main-content"]/section/section/div[1]/div/div/div[2]')[0].xpath('./p')
+                html = html_root.xpath(
+                    '//*[@id="main-content"]/section/section/div[1]/div/div/div[2]'
+                )[0].xpath('./p')
                 # 提取介绍
                 intro = []
                 for item in html:
-                    intro.append(item.xpath('text()')[0].strip(' ').strip('\n').strip('\t').strip())
+                    intro.append(
+                        item.xpath('text()')[0]
+                        .strip(' ')
+                        .strip('\n')
+                        .strip('\t')
+                        .strip()
+                    )
                 # 提取图片链接并下载
                 idx = -1
                 while True:
-                    image_url = html_root.xpath('//*[@id="main-content"]/section/section/div[1]/div/div/div[1]/div/a')[idx]
-                    image_url = ('https:' + image_url.xpath('@href')[0]).replace('imgsrc.hubblesite.org/hvi', 'hubblesite.org')
+                    image_url = html_root.xpath(
+                        '//*[@id="main-content"]/section/section/div[1]/div/div/div[1]/div/a'
+                    )[idx]
+                    image_url = ('https:' + image_url.xpath('@href')[0]).replace(
+                        'imgsrc.hubblesite.org/hvi', 'hubblesite.org'
+                    )
                     if image_url.split('.')[-1] == 'jpg':
                         break
                     idx -= 1
@@ -125,38 +153,67 @@ class HubbleSeeOnBirthday(QWidget):
                 response = requests.get(image_url)
                 fp = open(filename, 'wb')
                 fp.write(response.content)
-                data = {'date': key, 'intro': intro, 'image': Image.open(filename), 'ext': image_url.split('.')[-1]}
+                data = {
+                    'date': key,
+                    'intro': intro,
+                    'image': Image.open(filename),
+                    'ext': image_url.split('.')[-1],
+                }
             else:
-                data = {'date': key, 'intro': ['地球上还不存在%s这个日期哦~' % key], 'image': Image.open(os.path.join(self.rootdir, 'resources/icon/icon.jpg')), 'ext': 'jpg'}
+                data = {
+                    'date': key,
+                    'intro': ['地球上还不存在%s这个日期哦~' % key],
+                    'image': Image.open(
+                        os.path.join(self.rootdir, 'resources/icon/icon.jpg')
+                    ),
+                    'ext': 'jpg',
+                }
             self.update_signal.emit(data)
             self.is_querying = False
+
     '''保存查询结果'''
+
     def save(self):
         if self.data_for_save:
             if not os.path.exists(self.data_for_save.get('date')):
                 os.mkdir(self.data_for_save.get('date'))
-                imagepath = os.path.join(self.data_for_save.get('date'), 'hubblesee.%s' % self.data_for_save.get('ext'))
+                imagepath = os.path.join(
+                    self.data_for_save.get('date'),
+                    'hubblesee.%s' % self.data_for_save.get('ext'),
+                )
                 self.data_for_save.get('image').save(imagepath)
                 intro = '\n\n'.join(self.data_for_save.get('intro'))
-                f = open(os.path.join(self.data_for_save.get('date'), 'intro.txt'), 'w', encoding='utf-8')
+                f = open(
+                    os.path.join(self.data_for_save.get('date'), 'intro.txt'),
+                    'w',
+                    encoding='utf-8',
+                )
                 f.write(intro)
                 f.close()
             self.data_for_save = None
+
     '''更新界面'''
+
     def update(self, data):
         self.showIntroduction(data.get('intro'))
         self.showLabelImage(data.get('image'))
         self.data_for_save = data
+
     '''导入excel中的全年数据'''
+
     def loadFullYearData(self, filepath):
         full_year_data = {}
         excel_data = load_workbook(filepath)
         sheet = excel_data.get_sheet_by_name('365')
         for idx, row in enumerate(sheet.rows):
-            if idx > 366: break
-            if idx > 0: full_year_data[row[0].value.strftime('%Y-%m-%d')[5:]] = row[4].value
+            if idx > 366:
+                break
+            if idx > 0:
+                full_year_data[row[0].value.strftime('%Y-%m-%d')[5:]] = row[4].value
         return full_year_data
+
     '''显示图片'''
+
     def showLabelImage(self, image):
         image = image.resize((400, 300), Image.ANTIALIAS)
         fp = io.BytesIO()
@@ -165,6 +222,8 @@ class HubbleSeeOnBirthday(QWidget):
         qtimg.loadFromData(fp.getvalue(), 'BMP')
         qtimg_pixmap = QtGui.QPixmap.fromImage(qtimg)
         self.show_label.setPixmap(qtimg_pixmap)
+
     '''显示介绍的文字'''
+
     def showIntroduction(self, intro):
         self.text_result.setText('\n\n'.join(intro))

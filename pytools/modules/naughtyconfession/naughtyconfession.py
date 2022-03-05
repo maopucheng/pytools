@@ -2,9 +2,9 @@
 Function:
     仿抖音表白神器
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import os
 import sys
@@ -14,7 +14,9 @@ from tkinter import Tk, messagebox
 
 
 '''配置信息'''
-class Config():
+
+
+class Config:
     rootdir = os.path.split(os.path.abspath(__file__))[0]
     # 窗口大小(width, height)
     SCREENSIZE = (500, 260)
@@ -45,8 +47,26 @@ class Config():
 
 
 '''按钮类'''
+
+
 class Button(pygame.sprite.Sprite):
-    def __init__(self, x, y, width, height, text, fontpath, fontsize, fontcolor, bgcolors, edgecolor, edgesize=1, is_want_to_be_selected=True, screensize=None, **kwargs):
+    def __init__(
+        self,
+        x,
+        y,
+        width,
+        height,
+        text,
+        fontpath,
+        fontsize,
+        fontcolor,
+        bgcolors,
+        edgecolor,
+        edgesize=1,
+        is_want_to_be_selected=True,
+        screensize=None,
+        **kwargs
+    ):
         pygame.sprite.Sprite.__init__(self)
         self.rect = pygame.Rect(x, y, width, height)
         self.text = text
@@ -57,14 +77,18 @@ class Button(pygame.sprite.Sprite):
         self.edgesize = edgesize
         self.is_want_tobe_selected = is_want_to_be_selected
         self.screensize = screensize
+
     '''自动根据各种情况将按钮绑定到屏幕'''
+
     def draw(self, screen, mouse_pos):
         # 鼠标在按钮范围内
         if self.rect.collidepoint(mouse_pos):
             # --不想被选中
             if not self.is_want_tobe_selected:
                 while self.rect.collidepoint(mouse_pos):
-                    self.rect.left, self.rect.top = random.randint(0, self.screensize[0]-self.rect.width), random.randint(0, self.screensize[1]-self.rect.height)
+                    self.rect.left, self.rect.top = random.randint(
+                        0, self.screensize[0] - self.rect.width
+                    ), random.randint(0, self.screensize[1] - self.rect.height)
             pygame.draw.rect(screen, self.bgcolors[0], self.rect, 0)
             pygame.draw.rect(screen, self.edgecolor, self.rect, self.edgesize)
         # 鼠标不在按钮范围内
@@ -73,10 +97,18 @@ class Button(pygame.sprite.Sprite):
             pygame.draw.rect(screen, self.edgecolor, self.rect, self.edgesize)
         text_render = self.font.render(self.text, True, self.fontcolor)
         fontsize = self.font.size(self.text)
-        screen.blit(text_render, (self.rect.x+(self.rect.width-fontsize[0])/2, self.rect.y+(self.rect.height-fontsize[1])/2))
+        screen.blit(
+            text_render,
+            (
+                self.rect.x + (self.rect.width - fontsize[0]) / 2,
+                self.rect.y + (self.rect.height - fontsize[1]) / 2,
+            ),
+        )
 
 
 '''在指定位置显示文字'''
+
+
 def showText(screen, text, position, fontpath, fontsize, fontcolor, is_bold=False):
     font = pygame.font.Font(fontpath, fontsize)
     font.set_bold(is_bold)
@@ -85,13 +117,18 @@ def showText(screen, text, position, fontpath, fontsize, fontcolor, is_bold=Fals
 
 
 '''仿抖音表白神器'''
-class NaughtyConfession():
+
+
+class NaughtyConfession:
     tool_name = '仿抖音表白神器'
+
     def __init__(self, title='来自一位喜欢你的小哥哥', **kwargs):
         self.title = title
         self.cfg = Config()
         for key, value in kwargs.items():
-            if hasattr(self.cfg, key): setattr(self.cfg, key, value)
+            if hasattr(self.cfg, key):
+                setattr(self.cfg, key, value)
+
     def run(self):
         cfg = self.cfg
         # 初始化
@@ -107,14 +144,34 @@ class NaughtyConfession():
         bg_image = pygame.transform.smoothscale(bg_image, (150, 150))
         # 实例化两个按钮
         button_yes = Button(
-            x=20, y=cfg.SCREENSIZE[1]-70, width=120, height=35, 
-            text='好呀', fontpath=cfg.FONT_PATH, fontsize=15, fontcolor=cfg.BLACK, edgecolor=cfg.SKYBLUE, 
-            edgesize=2, bgcolors=[cfg.DARKGRAY, cfg.GAINSBORO], is_want_to_be_selected=True, screensize=cfg.SCREENSIZE
+            x=20,
+            y=cfg.SCREENSIZE[1] - 70,
+            width=120,
+            height=35,
+            text='好呀',
+            fontpath=cfg.FONT_PATH,
+            fontsize=15,
+            fontcolor=cfg.BLACK,
+            edgecolor=cfg.SKYBLUE,
+            edgesize=2,
+            bgcolors=[cfg.DARKGRAY, cfg.GAINSBORO],
+            is_want_to_be_selected=True,
+            screensize=cfg.SCREENSIZE,
         )
         button_no = Button(
-            x=cfg.SCREENSIZE[0]-140, y=cfg.SCREENSIZE[1]-70, width=120, height=35, 
-            text='算了吧', fontpath=cfg.FONT_PATH, fontsize=15, fontcolor=cfg.BLACK, edgecolor=cfg.DARKGRAY, 
-            edgesize=1, bgcolors=[cfg.DARKGRAY, cfg.GAINSBORO], is_want_to_be_selected=False, screensize=cfg.SCREENSIZE
+            x=cfg.SCREENSIZE[0] - 140,
+            y=cfg.SCREENSIZE[1] - 70,
+            width=120,
+            height=35,
+            text='算了吧',
+            fontpath=cfg.FONT_PATH,
+            fontsize=15,
+            fontcolor=cfg.BLACK,
+            edgecolor=cfg.DARKGRAY,
+            edgesize=1,
+            bgcolors=[cfg.DARKGRAY, cfg.GAINSBORO],
+            is_want_to_be_selected=False,
+            screensize=cfg.SCREENSIZE,
         )
         # 是否点击了好呀按钮
         is_agree = False
@@ -123,7 +180,7 @@ class NaughtyConfession():
         while True:
             # --背景图片
             screen.fill(cfg.WHITE)
-            screen.blit(bg_image, (cfg.SCREENSIZE[0]-bg_image.get_height(), 0))
+            screen.blit(bg_image, (cfg.SCREENSIZE[0] - bg_image.get_height(), 0))
             # --鼠标事件捕获
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -140,8 +197,24 @@ class NaughtyConfession():
                         root.destroy()
                         is_agree = True
             # --显示文字
-            showText(screen=screen, text='小姐姐, 我观察你很久了', position=(40, 50), fontpath=cfg.FONT_PATH, fontsize=25, fontcolor=cfg.BLACK, is_bold=False)
-            showText(screen=screen, text='做我女朋友好不好?', position=(40, 100), fontpath=cfg.FONT_PATH, fontsize=25, fontcolor=cfg.BLACK, is_bold=True)
+            showText(
+                screen=screen,
+                text='小姐姐, 我观察你很久了',
+                position=(40, 50),
+                fontpath=cfg.FONT_PATH,
+                fontsize=25,
+                fontcolor=cfg.BLACK,
+                is_bold=False,
+            )
+            showText(
+                screen=screen,
+                text='做我女朋友好不好?',
+                position=(40, 100),
+                fontpath=cfg.FONT_PATH,
+                fontsize=25,
+                fontcolor=cfg.BLACK,
+                is_bold=True,
+            )
             # --显示按钮
             button_yes.draw(screen, pygame.mouse.get_pos())
             button_no.draw(screen, pygame.mouse.get_pos())

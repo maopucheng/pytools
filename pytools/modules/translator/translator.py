@@ -2,9 +2,9 @@
 Function:
     翻译软件
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import os
 import re
@@ -72,7 +72,9 @@ function a(r) {
 
 
 '''百度翻译软件'''
-class BaiduTranslator():
+
+
+class BaiduTranslator:
     def __init__(self):
         self.session = requests.Session()
         self.session.cookies.set('BAIDUID', '19288887A223954909730262637D1DEB:FG=1;')
@@ -81,12 +83,20 @@ class BaiduTranslator():
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.102 Safari/537.36'
         }
         self.data = {
-            'from': '', 'to': '', 'query': '', 'transtype': 'translang',
-            'simple_means_flag': '3', 'sign': '', 'token': '', 'domain': 'common'
+            'from': '',
+            'to': '',
+            'query': '',
+            'transtype': 'translang',
+            'simple_means_flag': '3',
+            'sign': '',
+            'token': '',
+            'domain': 'common',
         }
         self.url = 'https://fanyi.baidu.com/v2transapi'
         self.langdetect_url = 'https://fanyi.baidu.com/langdetect'
+
     '''翻译'''
+
     def translate(self, word):
         self.data['from'] = self.detectLanguage(word)
         self.data['to'] = 'en' if self.data['from'] == 'zh' else 'zh'
@@ -96,14 +106,18 @@ class BaiduTranslator():
         self.data['sign'] = self.getSign(gtk, word)
         response = self.session.post(self.url, data=self.data)
         return [response.json()['trans_result']['data'][0]['result'][0][1]]
+
     '''获得token和gtk'''
+
     def getTokenGtk(self):
         url = 'https://fanyi.baidu.com/'
         response = requests.get(url, headers=self.headers)
         token = re.findall(r"token: '(.*?)'", response.text)[0]
         gtk = re.findall(r";window.gtk = ('.*?');", response.text)[0]
         return token, gtk
+
     '''获得签名'''
+
     def getSign(self, gtk, word):
         evaljs = js2py.EvalJs()
         js_code = bd_js_code
@@ -111,28 +125,48 @@ class BaiduTranslator():
         evaljs.execute(js_code)
         sign = evaljs.e(word)
         return sign
+
     '''检测使用的语言'''
+
     def detectLanguage(self, word):
         data = {'query': word}
-        response = self.session.post(self.langdetect_url, headers=self.headers, data=data)
+        response = self.session.post(
+            self.langdetect_url, headers=self.headers, data=data
+        )
         return response.json()['lan']
 
 
 '''有道翻译软件'''
-class YoudaoTranslator():
+
+
+class YoudaoTranslator:
     def __init__(self):
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/70.0.3538.77 Safari/537.36',
             'Referer': 'http://fanyi.youdao.com/',
-            'Cookie': 'OUTFOX_SEARCH_USER_ID=-481680322@10.169.0.83;'
+            'Cookie': 'OUTFOX_SEARCH_USER_ID=-481680322@10.169.0.83;',
         }
         self.data = {
-            'i': None, 'from': 'AUTO', 'to': 'AUTO', 'smartresult': 'dict',
-            'client': 'fanyideskweb', 'salt': None, 'sign': None, 'lts': None,
-            'bv': None, 'doctype': 'json', 'version': '2.1', 'keyfrom': 'fanyi.web', 'action': 'FY_BY_REALTlME'
+            'i': None,
+            'from': 'AUTO',
+            'to': 'AUTO',
+            'smartresult': 'dict',
+            'client': 'fanyideskweb',
+            'salt': None,
+            'sign': None,
+            'lts': None,
+            'bv': None,
+            'doctype': 'json',
+            'version': '2.1',
+            'keyfrom': 'fanyi.web',
+            'action': 'FY_BY_REALTlME',
         }
-        self.url = 'http://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule'
+        self.url = (
+            'http://fanyi.youdao.com/translate_o?smartresult=dict&smartresult=rule'
+        )
+
     '''翻译'''
+
     def translate(self, word):
         lts = str(int(time.time() * 10000))
         salt = lts + str(int(random.random() * 10))
@@ -150,9 +184,12 @@ class YoudaoTranslator():
 
 
 '''翻译软件'''
+
+
 class Translator(QWidget):
     tool_name = '翻译软件'
-    def __init__(self, parent=None, title='翻译软件 —— Charles的皮卡丘', **kwargs):
+
+    def __init__(self, parent=None, title='翻译软件 —— Car的皮皮', **kwargs):
         super(Translator, self).__init__(parent)
         rootdir = os.path.split(os.path.abspath(__file__))[0]
         self.setWindowTitle(title)
@@ -178,15 +215,20 @@ class Translator(QWidget):
         self.setLayout(self.grid)
         self.setFixedSize(400, 150)
         # 事件响应
-        self.btn_baidu.clicked.connect(lambda : self.translate(api='baidu'))
-        self.btn_youdao.clicked.connect(lambda : self.translate(api='youdao'))
+        self.btn_baidu.clicked.connect(lambda: self.translate(api='baidu'))
+        self.btn_youdao.clicked.connect(lambda: self.translate(api='youdao'))
         # 定义翻译软件
         self.bd_translate = BaiduTranslator()
         self.yd_translate = YoudaoTranslator()
+
     '''翻译'''
+
     def translate(self, api='baidu'):
         word = self.lineedit_ori.text()
-        if not word: return
-        if api == 'baidu': results = self.bd_translate.translate(word)
-        elif api == 'youdao': results = self.yd_translate.translate(word)
+        if not word:
+            return
+        if api == 'baidu':
+            results = self.bd_translate.translate(word)
+        elif api == 'youdao':
+            results = self.yd_translate.translate(word)
         self.lineedit_translated.setText(';'.join(results))

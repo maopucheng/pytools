@@ -53,7 +53,7 @@ tool_client.execute('timer')
 {
     start_color: 开始计时的时候的字体颜色, 默认值"white",
     stop_color: 结束计时的时候的字体颜色, 默认值"red",
-    title: 软件显示的标题, 默认值"简易计时器 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"简易计时器 —— Car的皮皮",
 }
 ```
 
@@ -103,7 +103,7 @@ tool_client.execute('calculator')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"简易计算器 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"简易计算器 —— Car的皮皮",
     root_size: 软件大小, 默认值"(320, 420)",
 }
 ```
@@ -152,7 +152,7 @@ tool_client.execute('clock')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"简易时钟 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"简易时钟 —— Car的皮皮",
     time_deltas: 时分秒的偏移量, 默认值"(0, 0, 0)",
 }
 ```
@@ -177,7 +177,7 @@ tool_client.execute('inquiryexpress')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"快递查询系统 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"快递查询系统 —— Car的皮皮",
 }
 ```
 
@@ -201,7 +201,7 @@ tool_client.execute('qrcodegenerator')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"二维码生成器 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"二维码生成器 —— Car的皮皮",
 }
 ```
 
@@ -225,7 +225,7 @@ tool_client.execute('musicplayer')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"音乐播放器 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"音乐播放器 —— Car的皮皮",
 }
 ```
 
@@ -249,7 +249,7 @@ tool_client.execute('luxunsentencesquery')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"鲁迅名言查询系统 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"鲁迅名言查询系统 —— Car的皮皮",
 }
 ```
 
@@ -297,7 +297,7 @@ tool_client.execute('newyearcardgenerator')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"新年贺卡生成器 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"新年贺卡生成器 —— Car的皮皮",
 }
 ```
 
@@ -345,7 +345,7 @@ tool_client.execute('succulentquery')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"多肉数据查询系统 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"多肉数据查询系统 —— Car的皮皮",
 }
 ```
 
@@ -369,7 +369,7 @@ tool_client.execute('artsigngenerator')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"艺术签名生成器 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"艺术签名生成器 —— Car的皮皮",
 }
 ```
 
@@ -393,7 +393,7 @@ tool_client.execute('genderpredictor')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"给定中文名的性别猜测器 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"给定中文名的性别猜测器 —— Car的皮皮",
 }
 ```
 
@@ -417,7 +417,7 @@ tool_client.execute('idiomsolitaire')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"成语接龙小软件 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"成语接龙小软件 —— Car的皮皮",
 }
 ```
 
@@ -441,7 +441,7 @@ tool_client.execute('trumptweetsgenerator')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"特朗普推特生成器 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"特朗普推特生成器 —— Car的皮皮",
 }
 ```
 
@@ -465,7 +465,7 @@ tool_client.execute('idcardquery')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"身份证信息查询工具 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"身份证信息查询工具 —— Car的皮皮",
 }
 ```
 
@@ -489,7 +489,7 @@ tool_client.execute('videoplayer')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"视频播放器 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"视频播放器 —— Car的皮皮",
 }
 ```
 
@@ -513,7 +513,7 @@ tool_client.execute('coupletgenerator')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"春联生成器 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"春联生成器 —— Car的皮皮",
     api_key: https://console.bce.baidu.com/#/index/overview申请到的对联生成器所需的api_key,
     secret_key: https://console.bce.baidu.com/#/index/overview申请到的对联生成器所需的secret_key,
 }
@@ -539,7 +539,7 @@ tool_client.execute('translator')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"翻译软件 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"翻译软件 —— Car的皮皮",
 }
 ```
 
@@ -550,7 +550,7 @@ tool_client.execute('translator')
 
 2.功能介绍
 
-简单的桌面宠物, 有皮卡丘。
+简单的桌面宠物, 有皮皮。
 
 3.调用示例代码
 ```python
@@ -565,7 +565,7 @@ tool_client.execute('desktoppet')
 {
     ACTION_DISTRIBUTION: 连贯动作的图片索引, 默认值"[['1', '2', '3'], ['4', '5', '6', '7', '8', '9', '10', '11'], ...]",
     PET_ACTIONS_MAP: 宠物素材路径, 默认值"{'pet_1': ACTION_DISTRIBUTION}",
-    pet_type: 指定宠物类型, 支持'bingdwendwen', 'pikachu', 'fox', 'blackcat'和'whitecat',
+    pet_type: 指定宠物类型, 支持'bingdwendwen', 'pp', 'fox', 'blackcat'和'whitecat',
 }
 ```
 
@@ -589,7 +589,7 @@ tool_client.execute('computersinger')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"让电脑主板上的蜂鸣器哼歌 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"让电脑主板上的蜂鸣器哼歌 —— Car的皮皮",
 }
 ```
 
@@ -613,7 +613,7 @@ tool_client.execute('hubbleseeonbirthday')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"你生日那天的宇宙 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"你生日那天的宇宙 —— Car的皮皮",
 }
 ```
 
@@ -776,7 +776,7 @@ tool_client.execute('ukrainemap')
 4.config中支持的参数
 ```
 {
-    title: 软件显示的标题, 默认值"乌克兰地图查询系统 —— Charles的皮卡丘",
+    title: 软件显示的标题, 默认值"乌克兰地图查询系统 —— Car的皮皮",
 }
 ```
 

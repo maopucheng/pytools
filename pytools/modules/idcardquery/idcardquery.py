@@ -2,9 +2,9 @@
 Function:
     身份证信息查询工具
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import os
 from PyQt5 import *
@@ -16,9 +16,12 @@ from id_validator import validator
 
 
 '''身份证信息查询工具'''
+
+
 class IDCardQuery(QWidget):
     tool_name = '身份证信息查询工具'
-    def __init__(self, parent=None, title='身份证信息查询工具 —— Charles的皮卡丘', **kwargs):
+
+    def __init__(self, parent=None, title='身份证信息查询工具 —— Car的皮皮', **kwargs):
         super(IDCardQuery, self).__init__(parent)
         rootdir = os.path.split(os.path.abspath(__file__))[0]
         self.setWindowTitle(title)
@@ -57,7 +60,9 @@ class IDCardQuery(QWidget):
         # 事件绑定
         self.generate_button.clicked.connect(self.generateID)
         self.query_button.clicked.connect(self.CheckAndParseID)
+
     '''验证并解析身份证号信息'''
+
     def CheckAndParseID(self):
         id_ = self.idcard_line_edit.text()
         is_valid = validator.is_valid(id_)
@@ -76,10 +81,13 @@ class IDCardQuery(QWidget):
             'sex': '性别',
         }
         for key, value in idinfos.items():
-            if key not in key_to_showtext: continue
+            if key not in key_to_showtext:
+                continue
             showinfo += f'{key_to_showtext[key]}: {value}\n'
         self.result_text_edit.setText(showinfo)
+
     '''生成假的身份证号'''
+
     def generateID(self):
         birthday = self.birthday_line_edit.text().replace('-', '')
         birthday = birthday if birthday else None

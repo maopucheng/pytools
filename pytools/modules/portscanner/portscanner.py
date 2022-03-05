@@ -2,9 +2,9 @@
 Function:
     简易端口扫描器
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import os
 import time
@@ -13,23 +13,40 @@ import threading
 
 
 '''简单的端口扫描器'''
+
+
 class PortScanner(threading.Thread):
     tool_name = '简易端口扫描器'
-    def __init__(self, target_ip='127.0.0.1', port_min=0, port_max=65535, savedir='.', savename='result.txt', **kwargs):
+
+    def __init__(
+        self,
+        target_ip='127.0.0.1',
+        port_min=0,
+        port_max=65535,
+        savedir='.',
+        savename='result.txt',
+        **kwargs
+    ):
         threading.Thread.__init__(self)
         assert isinstance(port_max, int) and isinstance(port_min, int)
         self.target_ip = target_ip
         self.port_min = max(0, port_min)
         self.port_max = min(65535, port_max)
         self.savepath = os.path.join(savedir, savename)
+
     '''运行'''
+
     def run(self):
         return self.__checker()
+
     '''检测'''
+
     def __checker(self):
-        for port in range(self.port_min, self.port_max+1):
+        for port in range(self.port_min, self.port_max + 1):
             self.__connect(port)
+
     '''连接'''
+
     def __connect(self, port):
         socket.setdefaulttimeout(1)
         s = socket.socket()
@@ -43,11 +60,17 @@ class PortScanner(threading.Thread):
         s.close()
         if flag:
             connect_time = str(int((t_end - t_start) * 1000))
-            info = 'Find --> [IP]: %s, [PORT]: %s, [Connect Time]: %s' % (self.target_ip, port, connect_time)
+            info = 'Find --> [IP]: %s, [PORT]: %s, [Connect Time]: %s' % (
+                self.target_ip,
+                port,
+                connect_time,
+            )
             print(info)
             self.__save(info)
         return flag
+
     '''保存结果'''
+
     def __save(self, content):
         if content:
             try:
@@ -55,3 +78,8 @@ class PortScanner(threading.Thread):
                     f.write(content + '\n')
             except:
                 time.sleep(0.1)
+
+
+if __name__ == "__main__":
+    p = PortScanner(target_ip='192.168.1.2', port_min=0, port_max=1000)
+    p.run()

@@ -2,9 +2,9 @@
 Function:
     给定中文名的性别猜测器
 Author:
-    Charles
+    Car
 微信公众号:
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import os
 import csv
@@ -13,9 +13,12 @@ from PyQt5.QtWidgets import *
 
 
 '''给定中文名的性别猜测器'''
+
+
 class GenderPredictor(QWidget):
     tool_name = '给定中文名的性别猜测器'
-    def __init__(self, parent=None, title='给定中文名的性别猜测器 —— Charles的皮卡丘', **kwargs):
+
+    def __init__(self, parent=None, title='给定中文名的性别猜测器 —— Car的皮皮', **kwargs):
         super(GenderPredictor, self).__init__(parent)
         rootdir = os.path.split(os.path.abspath(__file__))[0]
         # 定义界面
@@ -50,8 +53,13 @@ class GenderPredictor(QWidget):
         self.total = self.male_total + self.female_total
         self.name_probs = {}
         for key, value in self.name_freqs.items():
-            self.name_probs[key] = (int(value[0])/self.male_total, int(value[1])/self.female_total)
+            self.name_probs[key] = (
+                int(value[0]) / self.male_total,
+                int(value[1]) / self.female_total,
+            )
+
     '''预测性别'''
+
     def predict(self, name):
         def genderprob(name, probs, type_='male'):
             assert type_ in ['male', 'female']
@@ -64,20 +72,27 @@ class GenderPredictor(QWidget):
                 for c in name:
                     p *= probs.get(c, (0, 0))[1]
             return p
+
         for c in name:
             assert u'\u4e00' <= c <= u'\u9fa0'
         male_prob = genderprob(name, self.name_probs, 'male')
         female_prob = genderprob(name, self.name_probs, 'female')
-        result = {'male': male_prob / (male_prob + female_prob), 'female': female_prob / (male_prob + female_prob)}
+        result = {
+            'male': male_prob / (male_prob + female_prob),
+            'female': female_prob / (male_prob + female_prob),
+        }
         self.male_edit.setText(str(result['male']))
         self.female_edit.setText(str(result['female']))
         return result
+
     '''读取数据集'''
+
     def readCSV(self, csvpath='freqs.csv'):
         fp = open(csvpath, 'r', encoding='utf-8')
         csv_reader = csv.reader(fp)
         name_freqs = {}
         for idx, row in enumerate(csv_reader):
-            if idx == 0: continue
+            if idx == 0:
+                continue
             name_freqs[row[0]] = (row[1], row[2])
         return name_freqs

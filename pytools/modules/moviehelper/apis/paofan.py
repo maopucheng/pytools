@@ -2,9 +2,9 @@
 Function:
     根据电影名在泡饭影视里搜索电影资源(脚本仅供学习交流，禁止用于其他)
 Author: 
-    Charles
+    Car
 微信公众号: 
-    Charles的皮卡丘
+    Car的皮皮
 '''
 import re
 import sys
@@ -13,13 +13,17 @@ from bs4 import BeautifulSoup
 
 
 '''泡饭影视'''
-class Paofan():
+
+
+class Paofan:
     def __init__(self):
         self.headers = {
             'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/74.0.3729.169 Safari/537.36'
         }
         self.search_url = 'http://www.chapaofan.com/search/{}'
+
     '''外部调用'''
+
     def run(self):
         while True:
             # 关键字搜索
@@ -53,7 +57,11 @@ class Paofan():
                     continue
                 else:
                     res = requests.get(url, headers=self.headers)
-                    links = re.findall(r'"(ed2k.*?)"', res.text) + re.findall(r'"(thunder.*?)"', res.text) + re.findall(r'"(magnet.*?)"', res.text)
+                    links = (
+                        re.findall(r'"(ed2k.*?)"', res.text)
+                        + re.findall(r'"(thunder.*?)"', res.text)
+                        + re.findall(r'"(magnet.*?)"', res.text)
+                    )
                     if len(links) == 0:
                         print('[INFO-泡饭]抱歉, 未找到该电影的资源链接.')
                     else:
@@ -66,7 +74,9 @@ class Paofan():
                         f.close()
                     break
         return True
+
     '''处理用户输入'''
+
     def __input(self, info):
         user_input = input(info)
         if user_input == 'q' or user_input == 'Q':

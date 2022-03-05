@@ -18,8 +18,8 @@
 # -- Project information -----------------------------------------------------
 
 project = 'pytools'
-copyright = '2021, Charles'
-author = 'Charles'
+copyright = '2021, Car'
+author = 'Car'
 release = '0.1.0'
 
 # -- General configuration ---------------------------------------------------
@@ -28,7 +28,7 @@ release = '0.1.0'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
-	'sphinx.ext.autodoc',
+    'sphinx.ext.autodoc',
     'sphinx.ext.napoleon',
     'sphinx.ext.viewcode',
     'recommonmark',
