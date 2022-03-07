@@ -1,16 +1,16 @@
-from controlpcbyemail import EmailClass
-from controlpcbyemail import ControlPCbyEmail
+from control_pc_by_email import EmailClass
+from control_pc_by_email import ControlPCbyEmail
 
 import json
-import mtools
+import zjy_tools
 
 
-with open('./resources/config.json', 'r') as f:
-    options = json.load(f)
-print(options)
+# with open('./resources/config.json', 'r') as f:
+#     options = json.load(f)
+# print(options)
 ce = ControlPCbyEmail()
-email = EmailClass(options)
-res = email.send('主题', '内容啊', attach_path="c:\\1.jpg")
-# res = email.send('MT')
-# res = email.get('list')
-print(res)
+# email = EmailClass(options)
+# res = email.send('主题', '内容啊', attach_path="c:\\1.jpg")
+
+ce.run()
+

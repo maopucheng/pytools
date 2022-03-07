@@ -1,8 +1,13 @@
+# -*- encoding: utf-8 -*-
 '''
-Function:
-    邮件控制电脑
+@File    :   control_pc_by_email.py
+@Time    :   2022/03/07 20:02:15
+@Author  :   朱峻熠
+@Version :   1.0
+@Contact :   xxx@qq.com
+@Function:   用email实现远程控制电脑
+'''
 
-'''
 import re
 import os
 import json
@@ -17,7 +22,7 @@ from email.mime.text import MIMEText
 from email.header import decode_header
 from email.utils import parseaddr, formataddr
 from email.mime.multipart import MIMEMultipart
-import mtools
+import zjy_tools
 
 '''邮箱类'''
 
@@ -34,18 +39,27 @@ class EmailClass:
 
     def get(self, *args):
         res = {}
+        # 从收集参数中确定我需要取得邮件信息类型
         for arg in args:
+            # 邮箱状态
             if arg == 'stat':
                 res[arg] = self.pop3_server.stat()
+            # 邮箱邮件的索引列表
             elif arg == 'list':
                 res[arg] = self.pop3_server.list()
+            # 取得最新的一封邮件信息
             elif arg == 'latest':
                 mails = self.pop3_server.list()[1]
+                # 邮件是从1开始编号，最新一封邮件的序号就是邮件列表的长度
                 resp, lines, octets = self.pop3_server.retr(len(mails))
+                # lines为邮件message每一行内容，拼接后，可以得到完整的邮件
                 msg = b'\r\n'.join(lines).decode('utf-8')
+                # 解析并返回一个email.message对象
                 msg = Parser().parsestr(msg)
-                result = self.__parsemessage(msg)
+                # 解析message中具体内容
+                result = self.__parse_message(msg)
                 res[arg] = result
+            # 取得指定的邮件信息
             elif type(arg) == int:
                 mails = self.pop3_server.list()[1]
                 if arg > len(mails):
@@ -54,7 +68,7 @@ class EmailClass:
                 resp, lines, octets = self.pop3_server.retr(arg)
                 msg = b'\r\n'.join(lines).decode('utf-8')
                 msg = Parser().parsestr(msg)
-                result = self.__parsemessage(msg)
+                result = self.__parse_message(msg)
                 res[arg] = result
             else:
                 res[arg] = None
@@ -113,28 +127,32 @@ class EmailClass:
 
     '''关闭pop3连接'''
 
-    def closepop(self):
+    def close_pop(self):
         self.pop3_server.quit()
 
     '''重置pop3连接'''
 
-    def resetpop(self):
+    def reset_pop(self):
         options = self.options
-        self.closepop()
+        self.close_pop()
         self.pop3_server = poplib.POP3(options['receiver']['pop3_server'])
         self.pop3_server.user(options['receiver']['email'])
         self.pop3_server.pass_(options['receiver']['password'])
 
     '''解析邮件'''
 
-    def __parsemessage(self, msg):
+    def __parse_message(self, msg):
         result = {}
+        # 取得message中发件人，收件人，主题等信息
         for header in ['From', 'To', 'Subject']:
             result[header] = None
+            # 从message中提取特定的字段信息
             temp = msg.get(header, '')
             if temp:
                 if header == 'Subject':
+                    # 获取邮件头的指定信息，并得到编码类型
                     value, charset = decode_header(temp)[0]
+                    # 根据编码类型解码，避免内容乱码
                     if charset:
                         value = value.decode(charset)
                     result[header] = value
@@ -145,14 +163,18 @@ class EmailClass:
                         value = value.decode(charset)
                     result[header] = '%s<%s>' % (value, addr)
         result['Text'] = None
-        # 不考虑MIMEMultipart对象
+        # 暂时不考虑MIMEMultipart对象
         if not msg.is_multipart():
             content_type = msg.get_content_type()
             # 只考虑纯文本/HTML内容
             if content_type == 'text/plain' or content_type == 'text/html':
+                # 载入邮件正文
                 content = msg.get_payload(decode=True)
+                # 尝试取得邮件正文的编码类型
                 charset = msg.get_charset()
+                # 如果上一步没有取得编码类型，那么通过邮件解析查找charset关键字来取得编码类型
                 if charset is None:
+                    # 将
                     temp = msg.get('Content-Type', '').lower()
                     pos = temp.find('charset=')
                     if pos >= 0:
@@ -169,7 +191,9 @@ class EmailClass:
 class ControlPCbyEmail:
     tool_name = '邮件控制电脑'
 
+    # 虽然也可以通过字典收集参数配置服务器及命令等设置，但强烈建议用配置文件
     def __init__(self, time_interval=5, **kwargs):
+        # 如果类初始化时包括了参数，则使用初始化参数，否则读配置文件。
         if 'options' in kwargs:
             self.options = kwargs['options']
         else:
@@ -191,10 +215,10 @@ class ControlPCbyEmail:
 
     def run(self):
         options, word2cmd_dict = self.options, self.word2cmd_dict
-        self.printinfo()
+        self.print_info()
         print('[INFO]:Start server successfully...')
         while True:
-            self.email.resetpop()
+            self.email.reset_pop()
             mails = self.email.get('list')['list'][1]
             if len(mails) > self.num_msg:
                 for i in range(self.num_msg + 1, len(mails) + 1):
@@ -218,13 +242,13 @@ class ControlPCbyEmail:
                         except:
                             print('[Error]: Fail to send screenshot...')
                     else:
-                        self.runcmd(command)
+                        self.run_cmd(command)
                 self.num_msg = len(mails)
             time.sleep(self.time_interval)
 
     '''os.system()运行命令cmd'''
 
-    def runcmd(self, cmd):
+    def run_cmd(self, cmd):
         try:
             os.system(cmd)
             print('[INFO]: Run <%s> successfully...' % cmd)
@@ -244,8 +268,13 @@ class ControlPCbyEmail:
 
     '''打印欢迎信息'''
 
-    def printinfo(self):
-        print('*' * 20 + 'Welcome' + '*' * 20)
+    def print_info(self):
+        print('*' * 20 + '欢迎您使用本程序' + '*' * 20)
         print('[功能]: 用email远程控制你的电脑')
         print('[作者]: 朱峻熠')
 
+
+# 开始主程序
+if __name__ == '__main__':
+    print('主程序开始执行。。。')
+    pass
