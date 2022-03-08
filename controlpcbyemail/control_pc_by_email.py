@@ -174,7 +174,6 @@ class EmailClass:
                 charset = msg.get_charset()
                 # 如果上一步没有取得编码类型，那么通过邮件解析查找charset关键字来取得编码类型
                 if charset is None:
-                    # 将
                     temp = msg.get('Content-Type', '').lower()
                     pos = temp.find('charset=')
                     if pos >= 0:
@@ -191,9 +190,9 @@ class EmailClass:
 class ControlPCbyEmail:
     tool_name = '邮件控制电脑'
 
-    # 虽然也可以通过字典收集参数配置服务器及命令等设置，但强烈建议用配置文件
     def __init__(self, time_interval=5, **kwargs):
-        # 如果类初始化时包括了参数，则使用初始化参数，否则读配置文件。
+        # 如果类初始化时包括了参数，则使用初始化参数，否则读配置文件
+        # 虽然也可以通过字典收集参数配置服务器及命令等设置，但强烈建议用配置文件
         if 'options' in kwargs:
             self.options = kwargs['options']
         else:
@@ -208,7 +207,9 @@ class ControlPCbyEmail:
             ) as f:
                 self.word2cmd_dict = json.load(f)
         self.email = EmailClass(self.options)
+        # 取得目前邮件列表的数量并保存到变量
         self.num_msg = len(self.email.get('list')['list'][1])
+        # 服务器检查邮件的间隔时间，单位：秒
         self.time_interval = time_interval
 
     '''运行服务器'''
@@ -216,34 +217,45 @@ class ControlPCbyEmail:
     def run(self):
         options, word2cmd_dict = self.options, self.word2cmd_dict
         self.print_info()
-        print('[INFO]:Start server successfully...')
+        print('[INFO]:服务器成功启动...')
         while True:
+            # 重置pop3连接，以防断线
             self.email.reset_pop()
             mails = self.email.get('list')['list'][1]
+            # 比较邮件列表数量来判断是否有新邮件
             if len(mails) > self.num_msg:
                 for i in range(self.num_msg + 1, len(mails) + 1):
+                    # 取得新邮件
                     res = self.email.get(i)
+                    # 取得发件人邮箱地址
                     res_from = res[i]['From']
                     res_from = re.findall(r'<(.*?)>', res_from)[0].lower()
-                    print(res_from)
+                    # 判断是否为合法的发件人邮箱
                     if res_from != options['sender']['email'].lower():
                         continue
+                    # 利用邮件主题作为命令
                     command = res[i]['Subject']
+                    # 从配置文件中读出真正的命令行字符串
                     if command in word2cmd_dict:
                         command = word2cmd_dict[command]
+                    # 截屏为特殊命令，用截屏函数执行
                     if command == 'screenshot':
+                        # 保存截屏文件名
                         savename = './screenshot.jpg'
+                        # 调用截屏函数
                         self.screenshot(savename)
+                        # 邮件发送
                         try:
                             is_success = self.email.send(attach_path=savename)
                             if not is_success:
-                                raise RuntimeError('Fail to send screenshot...')
-                            print('[INFO]: Send screenshot successfully...')
+                                raise RuntimeError('发送截图失败...')
+                            print('[INFO]: 截屏图成功发送...')
                         except:
-                            print('[Error]: Fail to send screenshot...')
+                            print('[Error]: 发送截图失败...')
                     else:
                         self.run_cmd(command)
                 self.num_msg = len(mails)
+            # 休眠几秒
             time.sleep(self.time_interval)
 
     '''os.system()运行命令cmd'''
@@ -251,20 +263,21 @@ class ControlPCbyEmail:
     def run_cmd(self, cmd):
         try:
             os.system(cmd)
-            print('[INFO]: Run <%s> successfully...' % cmd)
+            print('[INFO]: 运行 <%s> 命令成功...' % cmd)
             return True
         except:
-            print('[Error]: Fail to Run <%s>...' % cmd)
+            print('[Error]: 运行 <%s> 命令失败...' % cmd)
             return False
 
-    '''截屏'''
+    '''截屏，默认保存当前目录'''
 
     def screenshot(self, savename='screenshot.jpg'):
         from PIL import ImageGrab
 
+        # 截屏函数
         img = ImageGrab.grab()
         img.save(savename)
-        print('[INFO]: Get %s successfully...' % savename)
+        print('[INFO]: 成功保存截图文件 %s ...' % savename)
 
     '''打印欢迎信息'''
 
@@ -274,7 +287,7 @@ class ControlPCbyEmail:
         print('[作者]: 朱峻熠')
 
 
-# 开始主程序
+'''开始主程序'''
 if __name__ == '__main__':
-    print('主程序开始执行。。。')
-    pass
+    control = ControlPCbyEmail()
+    control.run()

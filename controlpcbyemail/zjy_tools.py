@@ -29,7 +29,7 @@ def get_work_dir():
 
 if __name__ == "zjy_tools":
     change_work_dir_to_current()
-    print("引入zjy_tools包，并切换当前目录到" + get_current_dir())
+    # print("引入zjy_tools包，并切换当前目录到" + get_current_dir())
 
 if __name__ == '__main__':
     print(get_current_dir())

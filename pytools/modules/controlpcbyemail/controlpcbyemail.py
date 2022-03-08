@@ -1,10 +1,6 @@
 '''
 Function:
     邮件控制电脑
-Author:
-    Car
-微信公众号:
-    Car的皮皮
 '''
 import re
 import os
