@@ -7,7 +7,5 @@
 		"password": "Zjy@1234",
 		"pop3_server": "pop3.luyoo.com",
 		"smtp_server": "smtp.luyoo.com",
-		"enable_ssl": false,
-		"port": 0
 	}
 }
